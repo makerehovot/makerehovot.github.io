@@ -115,10 +115,6 @@
     .steps h3 { font-size: 1.1rem; }
     .steps p { color: var(--ink-soft); }
 
-    .band { background: var(--ink); color: #fff; border-radius: 28px; padding: 44px 28px; text-align: center; }
-    .band h2 { color: #fff; }
-    .band p { color: #d7d4cb; margin-bottom: 22px; }
-    .band .btn { background: var(--yellow); color: #3b3b3d; }
 
     /* info */
     .info { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
@@ -193,7 +189,7 @@
       <h1>הרעיון שלך <mark>הופך למציאות</mark></h1>
       <p>מייקרספייס של רחובות: מדפסות תלת־ממד, מידול, אלקטרוניקה, רובוטיקה, בטון פולימרי ועוד. מקום לבנות, ללמוד וליצור יחד – לילדים, נוער, מבוגרים ויזמים.</p>
       <div class="cta">
-        <a class="btn" href="#join">בואו להתנסות</a>
+        <a class="btn" href="#visit">בואו להתנסות</a>
         <a class="btn ghost" href="https://forms.gle/w5gVSBBZSxTtSxzA6" target="_blank" rel="noopener">הרשמה לתפירה</a>
       </div>
     </div>
@@ -229,16 +225,6 @@
     </div>
   </section>
 
-  <section id="join">
-    <div class="wrap">
-      <div class="band">
-        <h2>מוכנים ליצור?</h2>
-        <p>השאירו פרטים ונתאם ביקור היכרות ראשון, בלי התחייבות.</p>
-        <a class="btn" href="mailto:makerehovot@gmail.com?subject=ביקור היכרות במרחב היצירה">שלחו לנו הודעה</a>
-      </div>
-    </div>
-  </section>
-
   <section id="calendar">
     <div class="wrap">
       <h2>יומן פעילות</h2>
@@ -262,7 +248,7 @@
   <section id="visit">
     <div class="wrap">
       <h2>ביקור במרחב</h2>
-      <p class="lead"></p>
+      <p class="lead">אפשר פשוט להגיע בשעות הפתיחה. לשאלות אפשר לפנות במייל או לאחד האדמינים בקבוצת הווטסאפ.</p>
       <div class="info">
         <div><b>כתובת</b>ספריית רחובות החדשה, רחוב קרוננברג 1 רחובות</div>
         <div><b>שעות פתיחה</b>ימי שני ושלישי, בין השעות 17:00 ל - 21:00</div>
@@ -285,14 +271,22 @@
   // Regular opening hours (weekday: 0 = Sunday ... 6 = Saturday)
   const OPEN = { weekdays: [1, 2], from: "17:00", to: "21:00" };
   // Specific workshops / events. link is optional (e.g. a signup form).
+  // link: a signup form (opens in a new tab) or a page on this site, e.g. "workshops/test.html"
   // { date: "2026-11-18", title: "סדנת תפירה", time: "17:30–19:30", link: "https://forms.gle/..." }
-  const EVENTS = [];
+  const EVENTS = [
+    { date: "2026-11-09", title: "סדנת בדיקה", link: "workshops/test.html" },
+  ];
   // Dates the space is closed even though it's a regular opening day: ["2026-12-01"]
   const CLOSED = [];
   // ----------------------------------
 
   (function () {
     const key = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    // external links (signup forms) open in a new tab, pages on this site in the same tab
+    const setLink = (el, url) => {
+      el.href = url;
+      if (/^https?:/.test(url)) { el.target = "_blank"; el.rel = "noopener"; }
+    };
     const grid = document.getElementById("cal-grid");
     const title = document.getElementById("cal-title");
     const now = new Date();
@@ -337,7 +331,7 @@
           ev.className = "cal-ev";
           ev.textContent = e.title;
           ev.title = e.title + (e.time ? " · " + e.time : "");
-          if (e.link) { ev.href = e.link; ev.target = "_blank"; ev.rel = "noopener"; }
+          if (e.link) setLink(ev, e.link);
           cell.appendChild(ev);
         });
         grid.appendChild(cell);
@@ -357,7 +351,7 @@
         const [yy, mm, dd] = e.date.split("-").map(Number);
         const name = document.createElement(e.link ? "a" : "strong");
         name.textContent = e.title;
-        if (e.link) { name.href = e.link; name.target = "_blank"; name.rel = "noopener"; }
+        if (e.link) setLink(name, e.link);
         const when = document.createElement("span");
         when.textContent = " · " + dayFmt.format(new Date(yy, mm - 1, dd)) + (e.time ? " · " + e.time : "");
         li.append(name, when);

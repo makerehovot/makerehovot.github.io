@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>סדנת בדיקה | Make Rehovot</title>
+  <link rel="icon" href="../assets/logo-havayot.png">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #3b3b3d; --ink-soft: #66666a; --bg: #fffdf8; --line: #ece7da; --teal: #1ba7b8; --yellow: #fbb913; --orange: #ee5a24; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --ink: #f3f1ea; --ink-soft: #b9b6ad; --bg: #1d1d1f; --line: #38383b; }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: "Heebo", system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    header { border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 1080px; margin-inline: auto; padding-inline: 16px; }
+    .nav { display: flex; align-items: center; padding-block: 10px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; font-weight: 900; font-size: 1.25rem; }
+    .brand img { height: 54px; width: auto; }
+    main { flex: 1; display: grid; place-items: center; text-align: center; padding-block: 56px; }
+    .icon { font-size: 4rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; margin-block: 8px 12px; }
+    h1 mark { background: linear-gradient(transparent 58%, var(--yellow) 58%); color: inherit; padding-inline: 4px; }
+    p { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 28px; }
+    .btn { display: inline-block; padding: 12px 26px; border-radius: 999px; background: var(--orange); color: #fff; font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="../index.html">
+        <img src="../assets/logo-havayot.png" alt="רשת חוויות רחובות">
+        <span>Make Rehovot</span>
+      </a>
+    </div>
+  </header>
+  <main>
+    <div class="wrap">
+      <div class="icon" aria-hidden="true">🚧</div>
+      <h1>סדנת בדיקה <mark>בבנייה</mark></h1>
+      <p>דף הסדנה עוד לא מוכן. נחזור אליכם עם כל הפרטים בקרוב.</p>
+      <a class="btn" href="../index.html#calendar">חזרה ליומן</a>
+    </div>
+  </main>
+</body>
+</html>
