@@ -140,6 +140,9 @@
     .cal-day.today .num { background: var(--orange); color: #fff; border-radius: 50%; padding: 0 6px; }
     .cal-day .hrs, .cal-ev, .upcoming li span { unicode-bidi: plaintext; }
     .cal-day .hrs { direction: ltr; text-align: right; display: block; font-size: .7rem; color: var(--teal); font-weight: 500; }
+    .cal-day.closed { background: repeating-linear-gradient(135deg, var(--bg), var(--bg) 6px, var(--line) 6px, var(--line) 8px); }
+    .cal-day.closed .hrs { color: var(--orange); font-weight: 700; display: block; }
+    .cal-hol { display: block; font-size: .68rem; color: var(--ink-soft); line-height: 1.25; }
     .cal-ev {
       display: block; margin-top: 3px; padding: 1px 6px; border-radius: 6px; font-size: .72rem; font-weight: 700;
       background: var(--orange); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none;
@@ -148,12 +151,13 @@
     .dot { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
     .dot.open { background: var(--teal); opacity: .5; }
     .dot.ev { background: var(--orange); margin-inline-start: 12px; }
+    .dot.closed { background: repeating-linear-gradient(135deg, var(--line), var(--line) 3px, var(--ink-soft) 3px, var(--ink-soft) 4px); margin-inline-start: 12px; }
     .upcoming { margin-top: 24px; }
     .upcoming h3 { margin-bottom: 8px; }
     .upcoming ul { list-style: none; padding: 0; display: grid; gap: 8px; }
     .upcoming li { background: var(--card); border: 1px solid var(--line); border-inline-start: 6px solid var(--orange); border-radius: 12px; padding: 10px 16px; }
     .upcoming li span { color: var(--ink-soft); }
-    @media (max-width: 640px) { .cal { padding: 10px; } .cal-day { min-height: 56px; padding: 3px; font-size: .78rem; } .cal-day .hrs { display: none; } .cal-ev { font-size: .62rem; padding: 0 3px; } }
+    @media (max-width: 640px) { .cal { padding: 10px; } .cal-day { min-height: 56px; padding: 3px; font-size: .78rem; } .cal-day .hrs { display: none; } .cal-hol { font-size: .58rem; } .cal-ev { font-size: .62rem; padding: 0 3px; } }
 
     footer { border-top: 1px solid var(--line); padding-block: 28px; margin-top: 24px; color: var(--ink-soft); font-size: .92rem; }
     footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
@@ -220,7 +224,7 @@
       <ol class="steps">
         <li><h3>משאירים פרטים</h3><p>ממלאים טופס קצר ונחזור אליכם עם מועד קרוב.</p></li>
         <li><h3>מגיעים להיכרות</h3><p>סיור במרחב, הדרכת בטיחות ופרויקט ראשון קטן.</p></li>
-        <li><h3>יוצרים בקביעות</h3><p>נכנסים לשעות פתוחות, רוכשים מינוי או נרשמים לסדנה.</p></li>
+        <li><h3>יוצרים בקביעות</h3><p>נכנסים לשעות פתוחות או נרשמים לסדנה.</p></li>
       </ol>
     </div>
   </section>
@@ -236,7 +240,7 @@
           <button type="button" id="cal-prev" aria-label="החודש הקודם">‹</button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
-        <div class="cal-legend"><span class="dot open"></span>שעות פתיחה <span class="dot ev"></span>סדנה / אירוע</div>
+        <div class="cal-legend"><span class="dot open"></span>שעות פתיחה <span class="dot ev"></span>סדנה / אירוע <span class="dot closed"></span>סגור (חג / חופשה)</div>
       </div>
       <div id="cal-upcoming" class="upcoming" hidden>
         <h3>סדנאות קרובות</h3>
@@ -278,10 +282,46 @@
   ];
   // Dates the space is closed even though it's a regular opening day: ["2026-12-01"]
   const CLOSED = [];
+  // Holidays / special days, shown as labels. date (and optional "to" for a range) are YYYY-MM-DD.
+  // closed: true = the space is closed that day (taken from the Experiences vacation calendar, תשפ״ז).
+  const HOLIDAYS = [
+    { date: "2026-11-09", title: "חג הסיגד" },
+    { date: "2026-11-16", title: "יום בן־גוריון" },
+    { date: "2026-12-04", to: "2026-12-12", title: "חנוכה" },
+    { date: "2026-12-31", title: "יום השפה העברית" },
+    { date: "2027-01-23", title: "ט״ו בשבט" },
+    { date: "2027-02-07", title: "יום המשפחה" },
+    { date: "2027-02-21", to: "2027-02-22", title: "פורים קטן" },
+    { date: "2027-03-22", title: "ערב פורים" },
+    { date: "2027-03-23", to: "2027-03-24", title: "פורים", closed: true },
+    { date: "2027-04-17", title: "יום העלייה" },
+    { date: "2027-04-21", title: "ערב פסח" },
+    { date: "2027-04-22", to: "2027-04-28", title: "פסח", closed: true },
+    { date: "2027-05-04", title: "יום השואה" },
+    { date: "2027-05-11", title: "יום הזיכרון", closed: true },
+    { date: "2027-05-12", title: "יום העצמאות", closed: true },
+    { date: "2027-05-17", title: "יום הרצל" },
+    { date: "2027-05-21", title: "פסח שני" },
+    { date: "2027-05-25", title: "ל״ג בעומר" },
+    { date: "2027-06-04", title: "יום ירושלים" },
+    { date: "2027-06-10", title: "ערב שבועות", closed: true },
+    { date: "2027-06-11", title: "שבועות", closed: true },
+    { date: "2027-08-03", title: "יום ז׳בוטינסקי" },
+    { date: "2027-08-11", title: "ערב תשעה באב" },
+    { date: "2027-08-12", title: "תשעה באב" },
+    { date: "2027-08-18", title: "ט״ו באב" },
+  ];
   // ----------------------------------
 
   (function () {
     const key = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    // expand HOLIDAYS (incl. ranges) into a lookup by date
+    const HOL = {};
+    HOLIDAYS.forEach((h) => {
+      const [y1, m1, d1] = h.date.split("-").map(Number);
+      const end = (h.to || h.date);
+      for (let d = new Date(y1, m1 - 1, d1); key(d) <= end; d.setDate(d.getDate() + 1)) HOL[key(d)] = h;
+    });
     // external links (signup forms) open in a new tab, pages on this site in the same tab
     const setLink = (el, url) => {
       el.href = url;
@@ -319,12 +359,25 @@
         num.textContent = day;
         if (k === key(now)) cell.classList.add("today");
         cell.appendChild(num);
-        if (OPEN.weekdays.includes(date.getDay()) && !CLOSED.includes(k)) {
-          cell.classList.add("open");
+        const hol = HOL[k];
+        const closed = CLOSED.includes(k) || (hol && hol.closed);
+        if (OPEN.weekdays.includes(date.getDay())) {
           const h = document.createElement("span");
           h.className = "hrs";
-          h.textContent = OPEN.from + "–" + OPEN.to;
+          if (closed) {
+            cell.classList.add("closed");
+            h.textContent = "סגור";
+          } else {
+            cell.classList.add("open");
+            h.textContent = OPEN.from + "–" + OPEN.to;
+          }
           cell.appendChild(h);
+        }
+        if (hol) {
+          const l = document.createElement("span");
+          l.className = "cal-hol";
+          l.textContent = hol.title;
+          cell.appendChild(l);
         }
         EVENTS.filter((e) => e.date === k).forEach((e) => {
           const ev = document.createElement(e.link ? "a" : "span");
