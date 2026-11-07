@@ -156,3 +156,14 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 900; margin-bottom: 8px
 footer { border-top: 1px solid var(--line); padding-block: 28px; margin-top: 24px; color: var(--ink-soft); font-size: .92rem; }
 footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 footer img { height: 44px; }
+
+/* faq */
+.faq { display: grid; gap: 10px; max-width: 760px; }
+.faq details { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 20px; }
+.faq summary { cursor: pointer; font-weight: 700; padding-block: 16px; list-style: none; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 1.4rem; line-height: 1; color: var(--teal); flex: none; }
+.faq details[open] summary::after { content: "\2212"; }
+.faq summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 8px; }
+.faq details p { color: var(--ink-soft); padding-bottom: 16px; }
+.faq details a { color: var(--orange); font-weight: 700; }
