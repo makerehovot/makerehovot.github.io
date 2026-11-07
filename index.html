@@ -125,9 +125,11 @@
     .cal { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
     .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 1.2rem; }
     .cal-head button {
-      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg);
-      color: var(--ink); font-size: 1.4rem; cursor: pointer;
+      min-width: 40px; height: 40px; padding-inline: 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg);
+      color: var(--ink); font: inherit; font-size: .95rem; font-weight: 500; cursor: pointer;
     }
+    .cal-head button span { font-size: .9rem; }
+    @media (max-width: 480px) { .cal-head button span { display: none; } .cal-head button { font-size: 1.4rem; padding-inline: 0; width: 40px; } }
     .cal-head button:hover { background: var(--yellow); color: #3b3b3d; border-color: var(--yellow); }
     .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
     .cal-dow { text-align: center; font-weight: 700; font-size: .85rem; color: var(--ink-soft); padding-block: 4px; }
@@ -235,9 +237,9 @@
       <p class="lead">המרחב פתוח בימי שני ושלישי, <bdi dir="ltr">17:00–21:00</bdi>. סדנאות ואירועים מיוחדים מופיעים כאן.</p>
       <div class="cal" id="cal">
         <div class="cal-head">
-          <button type="button" id="cal-next" aria-label="החודש הבא">›</button>
+          <button type="button" id="cal-prev" aria-label="החודש הקודם">→ <span>החודש הקודם</span></button>
           <strong id="cal-title"></strong>
-          <button type="button" id="cal-prev" aria-label="החודש הקודם">‹</button>
+          <button type="button" id="cal-next" aria-label="החודש הבא"><span>החודש הבא</span> ←</button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
         <div class="cal-legend"><span class="dot open"></span>שעות פתיחה <span class="dot ev"></span>סדנה / אירוע <span class="dot closed"></span>סגור (חג / חופשה)</div>
