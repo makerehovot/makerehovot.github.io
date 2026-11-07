@@ -143,4 +143,35 @@ const HOLIDAYS = [
       ul.appendChild(li);
     });
   }
+  // ---- "Open now" badge (Israel time, uses OPEN / CLOSED / HOLIDAYS above) ----
+  const badge = document.getElementById("open-now");
+  if (badge) {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Jerusalem", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h23",
+    }).formatToParts(new Date()).map((p) => [p.type, +p.value]));
+    const mins = parts.hour * 60 + parts.minute;
+    const toMin = (t) => +t.split(":")[0] * 60 + +t.split(":")[1];
+    const isClosed = (d) => CLOSED.includes(key(d)) || (HOL[key(d)] && HOL[key(d)].closed);
+    const isOpenDay = (d) => OPEN.weekdays.includes(d.getDay()) && !isClosed(d);
+    const dayName = new Intl.DateTimeFormat(locale, { weekday: "long" });
+    const today = new Date(parts.year, parts.month - 1, parts.day);
+    let state = "closed", msg = "";
+    if (isOpenDay(today) && mins >= toMin(OPEN.from) && mins < toMin(OPEN.to)) {
+      state = "open";
+      msg = EN ? "Open now until " + OPEN.to : "פתוח עכשיו עד " + OPEN.to;
+    } else {
+      for (let i = isOpenDay(today) && mins < toMin(OPEN.from) ? 0 : 1; i <= 21; i++) {
+        const d = new Date(parts.year, parts.month - 1, parts.day + i);
+        if (!isOpenDay(d)) continue;
+        const when = i === 0 ? (EN ? "today" : "היום") : i === 1 ? (EN ? "tomorrow" : "מחר") : (EN ? "on " : "ב") + dayName.format(d);
+        msg = EN ? "Opens " + when + " at " + OPEN.from : "נפתח " + when + " ב־" + OPEN.from;
+        break;
+      }
+    }
+    if (msg) {
+      badge.className = "open-badge " + state;
+      badge.textContent = msg;
+      badge.hidden = false;
+    }
+  }
 })();

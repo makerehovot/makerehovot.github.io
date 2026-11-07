@@ -167,3 +167,10 @@ footer img { height: 44px; }
 .faq summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 8px; }
 .faq details p { color: var(--ink-soft); padding-bottom: 16px; }
 .faq details a { color: var(--orange); font-weight: 700; }
+
+/* open-now badge + directions */
+.open-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-weight: 700; padding: 6px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); }
+.open-badge[hidden] { display: none; }
+.open-badge::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink-soft); }
+.open-badge.open::before { background: var(--green); box-shadow: 0 0 0 4px rgba(30, 143, 78, .2); }
+.map-link { color: var(--orange); font-weight: 700; }
