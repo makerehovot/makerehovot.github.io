@@ -174,3 +174,12 @@ footer img { height: 44px; }
 .open-badge::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink-soft); }
 .open-badge.open::before { background: var(--green); box-shadow: 0 0 0 4px rgba(30, 143, 78, .2); }
 .map-link { color: var(--orange); font-weight: 700; }
+
+/* volunteer band */
+.band { background: #3b3b3d; color: #fff; border-radius: 28px; padding: 44px 28px; text-align: center; }
+.band h2 { color: #fff; }
+.band p { color: #d7d4cb; max-width: 40em; margin: 0 auto 18px; }
+.band ul { list-style: none; padding: 0; margin: 0 auto 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; }
+.band li { background: rgba(255, 255, 255, .1); border-radius: 999px; padding: 6px 16px; }
+.band .btn { background: var(--yellow); color: #3b3b3d; }
+.band small { display: block; margin-top: 16px; color: #d7d4cb; }
