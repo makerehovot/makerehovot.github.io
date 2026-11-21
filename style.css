@@ -188,3 +188,13 @@ footer img { height: 44px; }
 .vol-close { position: absolute; inset-block-start: 10px; inset-inline-end: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: #fff; font-size: 1.8rem; line-height: 1; cursor: pointer; }
 .vol-close:hover { background: rgba(255, 255, 255, .15); }
 .vol :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.gallery .shot { padding: 0; border: 0; border-radius: 14px; overflow: hidden; cursor: zoom-in; aspect-ratio: 1; background: var(--line); }
+.gallery .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+.gallery .shot:hover img { transform: scale(1.05); }
+#lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; margin: auto; }
+#lightbox::backdrop { background: rgba(0, 0, 0, .8); }
+#lightbox img { display: block; max-width: 96vw; max-height: 92vh; border-radius: 12px; }
+#lightbox button { position: absolute; top: 8px; inset-inline-end: 8px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .6); color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; }
