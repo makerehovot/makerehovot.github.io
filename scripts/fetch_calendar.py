@@ -7,6 +7,9 @@ In the Google event:
   - the description text is shown on the event's page (workshops/ and en/workshops/)
   - the first URL in the description becomes the sign-up button
   - for an English description, add a line containing only "---" and write the English text after it
+
+To hand-edit a generated page, add the line <!-- manual --> to it: the sync then leaves that page
+alone (it is not rewritten, and not deleted if the event disappears from the calendar).
 """
 import hashlib, html, json, os, re, sys, urllib.request
 from datetime import datetime, timedelta
@@ -91,6 +94,13 @@ def paragraphs(text):
     return "\n".join("        <p>" + "<br>\n        ".join(linkify(l.strip()) for l in b.strip().splitlines()) + "</p>" for b in blocks)
 
 
+MANUAL = "<!-- manual -->"
+
+
+def is_manual(path):
+    return os.path.exists(path) and MANUAL in open(path, encoding="utf-8").read()
+
+
 def write(path, content):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -156,13 +166,15 @@ for c in items:
             desc=paragraphs(text), back="חזרה ליומן" if he else "Back to calendar", signup=button,
         )
         folder = "workshops" if he else os.path.join("en", "workshops")
-        write(os.path.join(ROOT, folder, slug + ".html"), page)
+        target = os.path.join(ROOT, folder, slug + ".html")
+        if not is_manual(target):
+            write(target, page)
 
 # remove pages of events that are no longer in the calendar
 for folder in ("workshops", os.path.join("en", "workshops")):
     d = os.path.join(ROOT, folder)
     for f in os.listdir(d) if os.path.isdir(d) else []:
-        if f.startswith("e-") and f.endswith(".html") and f[:-5] not in made:
+        if f.startswith("e-") and f.endswith(".html") and f[:-5] not in made and not is_manual(os.path.join(d, f)):
             os.remove(os.path.join(d, f))
 
 events.sort(key=lambda e: (e["date"], e.get("time", "")))
