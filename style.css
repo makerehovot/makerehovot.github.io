@@ -31,17 +31,21 @@ body {
 a { color: inherit; }
 
 /* header */
-header { border-bottom: 1px solid var(--line); }
+/* header and footer follow the Havayot site: logo straight on a warm bar */
+:root { --bar: #e7e0d4; --bar-ink: #3b3b3d; }
+header { background: var(--bar); color: var(--bar-ink); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 10px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 900; font-size: 1.25rem; }
-.brand img { height: 54px; width: auto; }
+.brand { padding-inline-end: 20px; border-inline-end: 1px solid rgba(59, 59, 61, .25); }
+.brand img { height: 68px; width: auto; display: block; }
+@media (max-width: 480px) { .brand { padding-inline-end: 0; border: 0; } .brand img { height: 48px; } .nav { gap: 8px; } .nav-end { gap: 6px; } .lang { padding: 6px 10px; } .btn.wa { padding: 8px 14px; } }
 .brand span { display: flex; flex-direction: column; line-height: 1.15; }
 .brand small { font-size: .85rem; font-weight: 500; color: var(--teal); }
 .card a { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--orange); }
 .nav ul { display: flex; gap: 22px; list-style: none; padding: 0; font-weight: 500; }
 .nav ul a { text-decoration: none; }
 .nav ul a:hover { color: var(--orange); }
-.lang { font-weight: 700; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; }
+.lang { font-weight: 700; text-decoration: none; border: 1px solid rgba(59, 59, 61, .3); border-radius: 999px; padding: 6px 14px; }
 .lang:hover { background: var(--yellow); border-color: var(--yellow); color: #3b3b3d; }
 .nav-end { display: flex; align-items: center; gap: 10px; }
 @media (max-width: 640px) { .nav ul { display: none; } }
@@ -89,6 +93,9 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 900; margin-bottom: 8px
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 24px; border-top: 6px solid var(--c, var(--teal));
 }
+.card .pay { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.card .pay a { margin-top: 0; padding: 6px 14px; border: 2px solid var(--orange); border-radius: 999px; font-size: .9rem; text-decoration: none; }
+.card .pay a:hover { background: var(--orange); color: #fff; }
 .card .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
 .card h3 { font-size: 1.15rem; margin-bottom: 4px; }
 .card p { color: var(--ink-soft); font-size: .98rem; }
@@ -153,9 +160,13 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 900; margin-bottom: 8px
 .upcoming li span { color: var(--ink-soft); }
 @media (max-width: 640px) { .cal { padding: 10px; } .cal-day { min-height: 56px; padding: 3px; font-size: .78rem; } .cal-day .hrs { display: none; } .cal-hol { font-size: .58rem; } .cal-ev { font-size: .62rem; padding: 0 3px; } }
 
-footer { border-top: 1px solid var(--line); padding-block: 28px; margin-top: 24px; color: var(--ink-soft); font-size: .92rem; }
-footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-footer img { height: 44px; }
+footer { background: var(--bar); color: var(--bar-ink); padding-block: 28px; margin-top: 24px; font-size: .92rem; }
+footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+footer .f-main { height: 72px; width: auto; }
+footer .f-partners { display: flex; align-items: center; gap: 28px; }
+footer .f-partners img { height: 84px; width: auto; }
+footer .f-copy { flex-basis: 100%; padding-top: 14px; border-top: 1px solid rgba(59, 59, 61, .2); }
+@media (max-width: 480px) { footer .f-partners { gap: 18px; } footer .f-partners img { height: 64px; } footer .f-main { height: 56px; } }
 
 /* faq */
 .faq { display: grid; gap: 10px; max-width: 760px; }
