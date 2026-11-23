@@ -19,10 +19,10 @@ jobs:
           ICAL_URL: ${{ secrets.ICAL_URL }}
       - name: Commit if changed
         run: |
-          if ! git diff --quiet -- events.json || [ -n "$(git ls-files --others --exclude-standard events.json)" ]; then
+          git add -A events.json workshops en/workshops
+          if ! git diff --cached --quiet; then
             git config user.name "calendar-bot"
             git config user.email "calendar-bot@users.noreply.github.com"
-            git add events.json
             git commit -m "Update events from Google Calendar"
             git push
           fi
