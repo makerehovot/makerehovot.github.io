@@ -4,6 +4,9 @@ const OPEN = { weekdays: [1, 2], from: "17:00", to: "21:00" };
 // Specific workshops / events. title = Hebrew, en = English. time and link are optional.
 // link: a signup form (opens in a new tab) or a page on this site, e.g. "workshops/test.html"
 // { date: "2026-11-18", title: "סדנת תפירה", en: "Sewing workshop", time: "17:30–19:30", link: "https://forms.gle/..." }
+// Events are also synced hourly from the Google Calendar into events.json (see .github/workflows/calendar.yml).
+// In the Google event: title = Hebrew title; optional line "EN: English title" in the description;
+// a URL in the description becomes the event link. Times come from the event itself.
 const EVENTS = [
   { date: "2026-11-09", title: "סדנת בדיקה", en: "Test workshop", link: "workshops/test.html" },
 ];
@@ -60,6 +63,7 @@ const HOLIDAYS = [
     el.href = url;
     if (/^https?:/.test(url)) { el.target = "_blank"; el.rel = "noopener"; }
   };
+  let events = EVENTS.slice();
   const grid = document.getElementById("cal-grid");
   const title = document.getElementById("cal-title");
   const now = new Date();
@@ -111,7 +115,7 @@ const HOLIDAYS = [
         l.textContent = text(hol);
         cell.appendChild(l);
       }
-      EVENTS.filter((e) => e.date === k).forEach((e) => {
+      events.filter((e) => e.date === k).forEach((e) => {
         const ev = document.createElement(e.link ? "a" : "span");
         ev.className = "cal-ev";
         ev.textContent = text(e);
@@ -127,10 +131,11 @@ const HOLIDAYS = [
   document.getElementById("cal-next").onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); };
   render();
 
-  const upcoming = EVENTS.filter((e) => e.date >= key(now)).sort((a, b) => a.date.localeCompare(b.date));
-  if (upcoming.length) {
-    document.getElementById("cal-upcoming").hidden = false;
+  function renderUpcoming() {
     const ul = document.getElementById("cal-upcoming-list");
+    ul.textContent = "";
+    const upcoming = events.filter((e) => e.date >= key(now)).sort((a, b) => a.date.localeCompare(b.date) || (a.time || "").localeCompare(b.time || ""));
+    document.getElementById("cal-upcoming").hidden = !upcoming.length;
     upcoming.forEach((e) => {
       const li = document.createElement("li");
       const [yy, mm, dd] = e.date.split("-").map(Number);
@@ -138,11 +143,25 @@ const HOLIDAYS = [
       name.textContent = text(e);
       if (e.link) setLink(name, e.link);
       const when = document.createElement("span");
-      when.textContent = " · " + dayFmt.format(new Date(yy, mm - 1, dd)) + (e.time ? " · " + e.time : "");
+      when.textContent = " · " + dayFmt.format(new Date(yy, mm - 1, dd)) + (e.time ? " · " : "");
       li.append(name, when);
+      if (e.time) {
+        const t = document.createElement("bdi");
+        t.dir = "ltr";
+        t.textContent = e.time;
+        when.append(t);
+      }
       ul.appendChild(li);
     });
   }
+  renderUpcoming();
+
+  // ---- Events synced from Google Calendar (events.json) ----
+  fetch((EN ? "../" : "") + "events.json").then((r) => r.ok ? r.json() : []).then((remote) => {
+    events = EVENTS.concat(remote);
+    render();
+    renderUpcoming();
+  }).catch(() => {});
   // ---- "Open now" badge (Israel time, uses OPEN / CLOSED / HOLIDAYS above) ----
   const badge = document.getElementById("open-now");
   if (badge) {
